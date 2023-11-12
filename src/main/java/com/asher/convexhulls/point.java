@@ -3,6 +3,7 @@ package com.asher.convexhulls;
 public class point {
     int x;
     int y;
+    float angle;
     point(int x,int y){
         this.x=x;
         this.y=y;

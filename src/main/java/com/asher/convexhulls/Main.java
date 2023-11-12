@@ -7,6 +7,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -28,6 +29,9 @@ public class Main extends Application {
     Scene drawLines = new Scene(group,winW, winH);
     LinkedList<point> points = new LinkedList<>();
     int count = 0;
+    public static void main(String[] args) {
+        launch();
+    }
     @Override
     public void start(Stage stage){
         oprs.setPromptText("Select an algorithm");
@@ -66,46 +70,72 @@ public class Main extends Application {
         stage.setScene(selectOperation);
         stage.show();
     }
-    public static void main(String[] args) {
-        launch();
-    }
     public void drawLineIntersection(String meth ,Stage stg){
+        drawLines.setFill(Color.web("#000000"));
         drawLines.setOnMouseClicked(e->{
             points.add( new point( (int) e.getX() , (int) e.getY() ) );
-            if(count<4) group.getChildren().add(new Circle( points.get(count).x , points.get(count).y ,4.0f));
+            if(count<4){
+                Circle newCircle = new Circle( points.get(count).x , points.get(count).y ,4.0f, Color.web("#FF0000"));
+                Label newLabel = new Label("p"+count);
+                newLabel.setLayoutX(points.get(count).x - 25);
+                newLabel.setLayoutY(points.get(count).y - 25);
+                newLabel.setFont(Font.font("Consolas", 15));
+                newLabel.setTextFill(Color.web("#FFFFFF"));
+                group.getChildren().add(newCircle);
+                group.getChildren().add(newLabel);
+
+            }
             helper(meth, drawLines,group,points);
         });
 
         stg.setScene(drawLines);
     }
     public void helper(String meth, Scene scn ,Group grp ,LinkedList<point> points){
+
         count++;
         if(count == 4){
-            grp.getChildren().add(new Line(points.get(0).x,points.get(0).y, points.get(1).x, points.get(1).y));
-            grp.getChildren().add(new Line(points.get(2).x,points.get(2).y, points.get(3).x, points.get(3).y));
+            Line l1 = new Line(points.get(0).x,points.get(0).y, points.get(1).x, points.get(1).y);
+            l1.setStroke(Color.web("#008000"));
+            Line l2 = new Line(points.get(2).x,points.get(2).y, points.get(3).x, points.get(3).y);
+            l2.setStroke(Color.web("#008000"));
+            grp.getChildren().add(l1);
+            grp.getChildren().add(l2);
             if(meth.equals("Line Intersection (Slope of two lines)")){
                 if(ConvexHullUtil.doIntersectSlope(points.get(0),points.get(1),points.get(2),points.get(3))){
-                    Text isec = new Text(430,650,"Lines DO intersect");
+                    Label isec = new Label("Lines DO intersect");
+                    isec.setLayoutX(430);
+                    isec.setLayoutY(650);
                     isec.setFont(Font.font("Arial", 24));
+                    isec.setTextFill(Color.web("#008000"));
                     grp.getChildren().add(isec);
-                    scn.setFill(Color.web("#8fdb91"));
+//                    scn.setFill(Color.web("#8fdb91"));
                 }else{
-                    Text isec = new Text(430, 650, "Lines DO NOT intersect");
+                    Label isec = new Label("Lines DO intersect");
+                    isec.setLayoutX(430);
+                    isec.setLayoutY(650);
                     isec.setFont(Font.font("Arial", 24));
+                    isec.setTextFill(Color.web("#FF0000"));
                     grp.getChildren().add(isec);
-                    scn.setFill(Color.web("#f74f58"));
+//                    scn.setFill(Color.web("#f74f58"));
                 }
-            }else{
+            }
+            else{
                 if(ConvexHullUtil.doIntersectArea(points.get(0),points.get(1),points.get(2),points.get(3))){
-                    Text isec = new Text(430,650,"Lines DO intersect");
+                    Label isec = new Label("Lines DO intersect");
+                    isec.setLayoutX(430);
+                    isec.setLayoutY(650);
                     isec.setFont(Font.font("Arial", 24));
+                    isec.setTextFill(Color.web("#008000"));
                     grp.getChildren().add(isec);
-                    scn.setFill(Color.web("#8fdb91"));
+//                    scn.setFill(Color.web("#8fdb91"));
                 }else{
-                    Text isec = new Text(430, 650, "Lines DO NOT intersect");
+                    Label isec = new Label("Lines DO intersect");
+                    isec.setLayoutX(430);
+                    isec.setLayoutY(650);
                     isec.setFont(Font.font("Arial", 24));
+                    isec.setTextFill(Color.web("#FF0000"));
                     grp.getChildren().add(isec);
-                    scn.setFill(Color.web("#f74f58"));
+//                    scn.setFill(Color.web("#f74f58"));
                 }
             }
             scn.setOnMouseClicked(null);

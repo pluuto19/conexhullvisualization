@@ -37,7 +37,6 @@ public class ConvexHullUtil {
     public static boolean doIntersectArea(point p0, point p1, point p2, point p3){
         return (ccwArea(p0,p1,p2)*ccwArea(p0,p1,p3) <= 0) && (ccwArea(p2,p3,p0)*ccwArea(p2,p3,p1) <= 0);
     }
-
     public static float angle(point p1, point p2){
         int dx = p2.x - p1.x;
         int dy = p2.y - p1.y;
@@ -51,4 +50,5 @@ public class ConvexHullUtil {
         }
         return angle*90.0f;
     }
+
 }
