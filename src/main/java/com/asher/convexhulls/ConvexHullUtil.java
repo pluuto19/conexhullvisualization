@@ -6,6 +6,14 @@ import javafx.stage.Stage;
 import java.util.*;
 
 public class ConvexHullUtil {
+    static boolean shouldContinue = true;
+    static int maxY;
+    static int maxIdx = -1;
+    static point maxPoint;
+    static Stack<point> stack = new Stack<>();
+    static point last;
+    static point secondLast;
+    static Stack<Line> lines = new Stack<>();
     private static int ccwSlope(point p0, point p1, point p2){
         int dx1,dx2,dy1,dy2;
         dx1 = p1.x - p0.x;
@@ -55,10 +63,6 @@ public class ConvexHullUtil {
         }
         return angle*90.0f;
     }
-    static boolean shouldContinue = true;
-    static int maxY;
-    static int maxIdx = -1;
-    static point maxPoint;
     public static void bruteForce(List<point> points, Stage stg, Group grp){
         stg.getScene().setOnKeyPressed(null);
         for(int i = 0 ; i < points.size() ; i++){
@@ -141,7 +145,6 @@ public class ConvexHullUtil {
         }
 
     }
-
     private static void findMaxY(List<point> points) {
         maxY = points.get(0).y;
         maxIdx = 0;
@@ -154,7 +157,6 @@ public class ConvexHullUtil {
             }
         }
     }
-
     private static float myAngle(point a, point b){
         float dx = a.x - b.x;
         float dy = a.y - b.y;
@@ -199,10 +201,6 @@ public class ConvexHullUtil {
         }
 
     }
-    static Stack<point> stack = new Stack<>();
-    static point last;
-    static point secondLast;
-    static LinkedList<Line> lines = new LinkedList<>();
     public static void grahamScan(List<point> points, Stage stg, Group grp){
         stg.getScene().setOnKeyPressed(null);
         findMaxY(points);
@@ -224,29 +222,23 @@ public class ConvexHullUtil {
                 drawLine(last, secondLast, grp);
             }
             else{
-                grp.getChildren().remove(lines.get(lines.size()-1));
+                grp.getChildren().remove(lines.pop());
                 point j = stack.pop();
                 last = secondLast;
                 secondLast = stack.get(stack.size()-2);
                 i--;
             }
         }
-
         stack.add(stack.get(0));
         last = stack.get(stack.size()-1);
         secondLast = stack.get(stack.size()-2);
         drawLine(last,secondLast,grp);
-
-        for (int i = 0; i < stack.size(); i++) {
-            System.out.println(stack.get(i).name);
-        }
-        System.out.println(lines.size());
     }
     private static void drawLine(point a, point b, Group grp){
         Line l1 = new Line(a.x, a.y, b.x, b.y);
         l1.setStroke(Color.web("#008000"));
         grp.getChildren().add(l1);
-        lines.add(l1);
+        lines.push(l1);
     }
 
 }
