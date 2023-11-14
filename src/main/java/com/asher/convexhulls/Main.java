@@ -65,7 +65,9 @@ public class Main extends Application {
                     case "Jarvis March":
                         drawConvexHull("Jarvis March", stage);
                         break;
-                    case "Pairwise Elimination":
+                    case "Graham Scan":
+                        drawConvexHull("Graham Scan", stage);
+                    case "Quick Elimination":
                         System.out.println("ada");
                         break;
                 }
@@ -150,7 +152,14 @@ public class Main extends Application {
         pointsCanvas.setFill(Color.web("#000000"));
         pointsCanvas.setOnMouseClicked(e->{
             points.add(new point((int) e.getX(), (int) e.getY()));
+            Label newLabel = new Label("p" + count);
+            points.get(count).name = "p" + count;
             convexGroup.getChildren().add(new Circle(points.get(count).x, points.get(count).y, 3.0f, Color.web("#FF0000")));
+            newLabel.setLayoutX(points.get(count).x - 25);
+            newLabel.setLayoutY(points.get(count).y - 25);
+            newLabel.setFont(Font.font("Consolas", 10));
+            newLabel.setTextFill(Color.web("#FFFFFF"));
+            convexGroup.getChildren().add(newLabel);
             count++;
         });
         pointsCanvas.setOnKeyPressed(e->{
@@ -161,9 +170,10 @@ public class Main extends Application {
                         ConvexHullUtil.bruteForce(points, stg, convexGroup);
                         break;
                     case "Jarvis March":
-                        ConvexHullUtil.jarvisMarch(points, stg, convexGroup);
+                        ConvexHullUtil.jarvis2(points, stg, convexGroup);
                         break;
                     case "Graham Scan":
+                        ConvexHullUtil.grahamScan(points, stg, convexGroup);
                         break;
                     case "Quick Elimination":
                         break;
