@@ -166,13 +166,13 @@ public class Main extends Application {
                 pointsCanvas.setOnMouseClicked(null);
                 switch (meth){
                     case "Brute Force":
-                        ConvexHullUtil.bruteForce(points, stg, convexGroup);
+                        BruteForce.bruteForce(points, stg, convexGroup);
                         break;
                     case "Jarvis March":
-                        ConvexHullUtil.jarvis2(points, stg, convexGroup);
+                        JarvisMarch.jarvisMarch(points, stg, convexGroup);
                         break;
                     case "Graham Scan":
-                        ConvexHullUtil.grahamScan(points, stg, convexGroup);
+                        GrahamScan.grahamScan(points, stg, convexGroup);
                         break;
                     case "Quick Elimination":
                         break;
