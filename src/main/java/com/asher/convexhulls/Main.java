@@ -34,7 +34,6 @@ public class Main extends Application {
     Scene pointsCanvas = new Scene(convexGroup, winW, winH);
     LinkedList<point> points = new LinkedList<>();
     int count = 0;
-
     public static void main(String[] args) {
         launch();
     }

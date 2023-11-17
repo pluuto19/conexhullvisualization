@@ -1,5 +1,6 @@
 package com.asher.convexhulls;
 import javafx.scene.Group;
+import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
@@ -93,58 +94,6 @@ public class ConvexHullUtil {
             }
         }
     }
-    public static void jarvisMarch(List<point> points, Stage stg, Group grp){
-        stg.getScene().setOnKeyPressed(null);
-//        for (int i = 0 ; i < points.size() ; i++){
-//            System.out.println("point#"+i+" x:"+points.get(i).x+" y:"+points.get(i).y); points are all fine
-//        }
-        findMaxY(points);
-        //System.out.println(maxY + ", " + maxIdx + ", " + maxPoint.y + ", " + points.get(maxIdx).y + ", " + points.get(maxIdx)); //got the correct maxY point
-        points.set(maxIdx, points.get(0));
-        points.set(0, maxPoint);
-        //System.out.println(points.get(0).y +", " + points.get(0)); //swapping correctly
-        System.out.println("min point: " + points.get(0));
-
-        for(int i = 0 ; i < points.size() ;i++){
-            points.get(i).isOnHull=false;
-        }
-
-        for(int i = 0 ; i < points.size() ; i++){
-            System.out.println("anchor point: " + points.get(i).toString().split("@")[1]);
-//            System.out.println("point i: x: "+points.get(i).x + ", y: "+points.get(i).y);
-            for (int j = 0 ; j < points.size() ; j++){
-//                    System.out.println("point: " + points.get(j).toString().split("@")[1]);
-//                    System.out.println("point j: x: "+points.get(j).x + ", y: "+points.get(j).y);
-                    //System.out.println("angle:  " + myAngle(points.get(i), points.get(j)));
-                    points.get(j).angle = myAngle(points.get(i), points.get(j));
-                    //System.out.println(points.get(j).angle);
-            }
-
-//            for (int j = 0; j < points.size(); j++) {
-//                System.out.println("angle of point#"+j+", angle:"+points.get(j).angle);
-//            }
-            points.sort(Comparator.comparingDouble(point::getAngle));
-            for (int j = 0; j < points.size(); j++) {
-                System.out.println("angle of point: "+points.get(j).toString().split("@")[1]+", angle:"+points.get(j).angle);
-            }
-
-//            for (int j = 0 ; j < points.size() ; j++){
-//                System.out.println("point "+ j + ",  angle:" + points.get(j).getAngle());
-//            }
-//            for(int x = 0 ; x<points.size() ;x++){
-//                if(!points.get(x).isOnHull){
-//                    Line l = new Line(points.get(i).x, points.get(i).y, points.get(j).x, points.get(j).y);
-//                    l.setStroke(Color.web("#008000"));
-//                    grp.getChildren().add(l);
-//                    break;
-//                }
-//            }
-            Line l = new Line(points.get(0).x, points.get(0).y, points.get(1).x, points.get(1).y);
-            l.setStroke(Color.web("#008000"));
-            grp.getChildren().add(l);
-        }
-
-    }
     private static void findMaxY(List<point> points) {
         maxY = points.get(0).y;
         maxIdx = 0;
@@ -168,38 +117,46 @@ public class ConvexHullUtil {
         }
     }
     static LinkedList<point> hull = new LinkedList<>();
+    private static float currAngle = 0.0f;
+    private static int index=1;
     public static void jarvis2(List<point> points, Stage stg, Group grp){
         stg.getScene().setOnKeyPressed(null);
         findMaxY(points);
-        points.set(maxIdx, points.get(1));
-        points.set(1, maxPoint);
-        hull.add(points.get(1));
-        points.get(1).isOnHull = true;
-        points.get(1).isFirstPointOnHull = true;
+        points.set(maxIdx, points.get(index));
+        points.set(index, maxPoint);
         for(int i = 0 ; i < points.size() ;i++){
             points.get(i).isOnHull=false;
+            points.get(i).isFirstPointOnHull=false;
         }
-
+        hull.add(points.get(index));
+        points.get(1).isOnHull = true;
+        points.get(1).isFirstPointOnHull = true;
         while( ! (hull.get(0)==hull.get(hull.size()-1) && hull.size()>=3) ){
-            System.out.println(hull.size());
             for(int j = 0 ; j < points.size() ; j++){
-                if(points.get(1)==points.get(j)){
+                if(points.get(index)==points.get(j)){
                     points.get(j).angle = 0.0f;
                 }else if(points.get(j).isOnHull && !points.get(j).isFirstPointOnHull){
                     points.get(j).angle = Float.MAX_VALUE;
                 }else{
-                    points.get(j).angle = myAngle(points.get(1), points.get(j));
+                    points.get(j).angle = myAngle(points.get(index), points.get(j));
                 }
             }
             points.sort(Comparator.comparingDouble(point::getAngle));
-            Line l = new Line(points.get(0).x, points.get(0).y, points.get(1).x, points.get(1).y);
-            l.setStroke(Color.web("#008000"));
-            grp.getChildren().add(l);
-            points.get(1).isOnHull = true;
-            if(points.get(1)!=maxPoint) points.get(1).isFirstPointOnHull = false;
-            hull.add(points.get(1));
+            index = 1;
+            for (int i = 1 ; i < points.size() ; i++){
+                if( ((points.get(i).isOnHull && points.get(i).isFirstPointOnHull)||(!points.get(i).isOnHull)) && points.get(i).angle >= currAngle){
+                    points.get(i).isOnHull = true;
+                    hull.add(points.get(i));
+                    currAngle = points.get(i).angle;
+                    Line l = new Line(points.get(0).x, points.get(0).y, points.get(i).x, points.get(i).y);
+                    l.setStroke(Color.web("#008000"));
+                    grp.getChildren().add(l);
+                    break;
+                }else{
+                    index++;
+                }
+            }
         }
-
     }
     public static void grahamScan(List<point> points, Stage stg, Group grp){
         stg.getScene().setOnKeyPressed(null);
@@ -240,5 +197,4 @@ public class ConvexHullUtil {
         grp.getChildren().add(l1);
         lines.push(l1);
     }
-
 }
