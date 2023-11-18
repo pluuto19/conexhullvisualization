@@ -5,8 +5,10 @@ public class point {
     int x;
     int y;
     float angle;
+    int area;
     boolean isFirstPointOnHull;
     boolean isOnHull;
+    boolean flag;
     point(int x,int y){
         this.x=x;
         this.y=y;
@@ -20,5 +22,16 @@ public class point {
     }
     public float getAngle(){
         return angle;
+    }
+    public int getArea(){
+        return area;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 }

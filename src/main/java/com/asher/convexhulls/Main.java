@@ -23,7 +23,7 @@ import java.util.LinkedList;
 public class Main extends Application {
     int winW = 1100;
     int winH = 700;
-    String[] options = {"Line Intersection (Slope of two lines)", "Line Intersection (Area between three points)", "Research Method Intersection", "Brute Force", "Jarvis March", "Graham Scan", "Pairwise Elimination", "Research Method Hull"};
+    String[] options = {"Line Intersection (Slope of two lines)", "Line Intersection (Area between three points)", "Research Method Intersection", "Brute Force", "Jarvis March", "Graham Scan", "Quick Elimination", "Research Method Hull"};
     ComboBox<String> oprs = new ComboBox<>(FXCollections.observableArrayList(options));
     GridPane gridPane = new GridPane(3, 3);
     Button confirm = new Button("Launch");
@@ -67,7 +67,7 @@ public class Main extends Application {
                     case "Graham Scan":
                         drawConvexHull("Graham Scan", stage);
                     case "Quick Elimination":
-                        System.out.println("ada");
+                        drawConvexHull("Quick Elimination", stage);
                         break;
                 }
             } catch (NullPointerException ignored) {
@@ -175,6 +175,7 @@ public class Main extends Application {
                         GrahamScan.grahamScan(points, stg, convexGroup);
                         break;
                     case "Quick Elimination":
+                        QuickElimination.findConvexHull(points,stg, convexGroup);
                         break;
                     case "Research Paper":
                         break;
