@@ -166,7 +166,9 @@ public class Main extends Application {
                 pointsCanvas.setOnMouseClicked(null);
                 switch (meth){
                     case "Brute Force":
-                        BruteForce.bruteForce(points, stg, convexGroup);
+                        System.out.println("called");
+                        testBruteForce.bruteForce(points, stg, convexGroup);
+                        System.out.println("about to break");
                         break;
                     case "Jarvis March":
                         JarvisMarch.jarvisMarch(points, stg, convexGroup);
