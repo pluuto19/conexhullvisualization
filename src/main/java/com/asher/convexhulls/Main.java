@@ -167,7 +167,7 @@ public class Main extends Application {
                 switch (meth){
                     case "Brute Force":
                         System.out.println("called");
-                        testBruteForce.bruteForce(points, stg, convexGroup);
+                        animBruteForce.bruteForce(points, stg, convexGroup);
                         System.out.println("about to break");
                         break;
                     case "Jarvis March":

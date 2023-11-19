@@ -14,7 +14,7 @@ import java.security.Key;
 import java.util.List;
 import java.util.Stack;
 
-class testBruteForce {
+class animBruteForce {
     static boolean shouldContinue = true;
     static Stack<Line> ij = new Stack<>();
     static Stack<Line> jk = new Stack<>();
@@ -70,7 +70,7 @@ class testBruteForce {
             grp.getChildren().add(l1);
             ij.push(l1);
         }
-        if((a.x!=ij.peek().getStartX() && a.y!=ij.peek().getStartY()) && (b.x!=ij.peek().getEndX() && b.y!=ij.peek().getEndY()) ){
+        if((a.x!=ij.peek().getStartX() && a.y!=ij.peek().getStartY()) || (b.x!=ij.peek().getEndX() && b.y!=ij.peek().getEndY()) ){
             Line l1 = new Line(a.x, a.y, b.x, b.y);
             l1.setStroke(Color.web("#008000"));
             grp.getChildren().add(l1);
