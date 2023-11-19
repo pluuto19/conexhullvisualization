@@ -66,20 +66,20 @@ class animBruteForce {
     private static void drawLineIJ(point a, point b, Group grp) {
         if(ij.isEmpty()){
             Line l1 = new Line(a.x, a.y, b.x, b.y);
-            l1.setStroke(Color.web("#008000"));
+            l1.setStroke(Color.web("#4fcaf0"));
             grp.getChildren().add(l1);
             ij.push(l1);
         }
         if((a.x!=ij.peek().getStartX() && a.y!=ij.peek().getStartY()) || (b.x!=ij.peek().getEndX() && b.y!=ij.peek().getEndY()) ){
             Line l1 = new Line(a.x, a.y, b.x, b.y);
-            l1.setStroke(Color.web("#008000"));
+            l1.setStroke(Color.web("#4fcaf0"));
             grp.getChildren().add(l1);
             ij.push(l1);
         }
     }
     private static void drawLineJK(point a, point b, Group grp) {
         Line l1 = new Line(a.x, a.y, b.x, b.y);
-        l1.setStroke(Color.web("#008000"));
+        l1.setStroke(Color.web("#4fcaf0"));
         grp.getChildren().add(l1);
         jk.push(l1);
     }
