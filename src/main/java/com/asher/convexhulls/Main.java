@@ -21,6 +21,8 @@ import javafx.stage.Stage;
 import java.util.LinkedList;
 
 public class Main extends Application {
+    long startTime, elapsedTime;
+    long memBefore, memAfter, memUsed;
     int winW = 1100;
     int winH = 700;
     String[] options = {"Line Intersection (Slope of two lines)", "Line Intersection (Area between three points)", "Research Method Intersection", "Brute Force", "Jarvis March", "Graham Scan", "Quick Elimination", "Research Method Hull"};
@@ -37,7 +39,6 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch();
     }
-
     @Override
     public void start(Stage stage) {
         oprs.setPromptText("Select an algorithm");
@@ -66,6 +67,7 @@ public class Main extends Application {
                         break;
                     case "Graham Scan":
                         drawConvexHull("Graham Scan", stage);
+                        break;
                     case "Quick Elimination":
                         drawConvexHull("Quick Elimination", stage);
                         break;
@@ -78,7 +80,6 @@ public class Main extends Application {
         stage.setScene(selectOperation);
         stage.show();
     }
-
     public void drawLineIntersection(String meth, Stage stg) {
         drawLines.setFill(Color.web("#000000"));
         drawLines.setOnMouseClicked(e -> {
@@ -97,9 +98,11 @@ public class Main extends Application {
 
         stg.setScene(drawLines);
     }
-
     public void helper(String meth, Scene scn, Group grp, LinkedList<point> points) {
         if (count == 4) {
+            scn.setOnMouseClicked(null);
+            startTime = System.nanoTime();
+            memBefore = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
             Line l1 = new Line(points.get(0).x, points.get(0).y, points.get(1).x, points.get(1).y);
             l1.setStroke(Color.web("#008000"));
             Line l2 = new Line(points.get(2).x, points.get(2).y, points.get(3).x, points.get(3).y);
@@ -143,10 +146,13 @@ public class Main extends Application {
 //                    scn.setFill(Color.web("#f74f58"));
                 }
             }
-            scn.setOnMouseClicked(null);
+            elapsedTime = System.nanoTime() - startTime;
+            memAfter = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+            memUsed = memAfter-memBefore;
+            System.out.println("Time in milliseconds: " + (float) elapsedTime/1000000);
+            System.out.println("Memory used in Kilobytes: " + memUsed / 1024);
         }
     }
-
     public void drawConvexHull(String meth, Stage stg) {
         pointsCanvas.setFill(Color.web("#000000"));
         pointsCanvas.setOnMouseClicked(e->{
@@ -166,20 +172,54 @@ public class Main extends Application {
                 pointsCanvas.setOnMouseClicked(null);
                 switch (meth){
                     case "Brute Force":
-                        System.out.println("called");
-                        animBruteForce.bruteForce(points, stg, convexGroup);
-                        System.out.println("about to break");
+                        startTime = System.nanoTime();
+                        memBefore = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+                        BruteForce.bruteForce(points, stg, convexGroup);
+                        elapsedTime = System.nanoTime() - startTime;
+                        memAfter = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+                        memUsed = memAfter-memBefore;
+                        System.out.println("Time in milliseconds: " + (float) elapsedTime/1000000);
+                        System.out.println("Memory used in Kilobytes: " + memUsed / 1024);
                         break;
                     case "Jarvis March":
+                        startTime = System.nanoTime();
+                        memBefore = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
                         JarvisMarch.jarvisMarch(points, stg, convexGroup);
+                        elapsedTime = System.nanoTime() - startTime;
+                        memAfter = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+                        memUsed = memAfter-memBefore;
+                        System.out.println("Time in milliseconds: " + (float) elapsedTime/1000000);
+                        System.out.println("Memory used in Kilobytes: " + memUsed / 1024);
                         break;
                     case "Graham Scan":
+                        startTime = System.nanoTime();
+                        memBefore = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
                         GrahamScan.grahamScan(points, stg, convexGroup);
+                        elapsedTime = System.nanoTime() - startTime;
+                        memAfter = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+                        memUsed = memAfter-memBefore;
+                        System.out.println("Time in milliseconds: " + (float) elapsedTime/1000000);
+                        System.out.println("Memory used in Kilobytes: " + memUsed / 1024);
                         break;
                     case "Quick Elimination":
+                        startTime = System.nanoTime();
+                        memBefore = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
                         QuickElimination.findConvexHull(points,stg, convexGroup);
+                        elapsedTime = System.nanoTime() - startTime;
+                        memAfter = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+                        memUsed = memAfter-memBefore;
+                        System.out.println("Time in milliseconds: " + (float) elapsedTime/1000000);
+                        System.out.println("Memory used in Kilobytes: " + memUsed / 1024);
                         break;
                     case "Research Paper":
+                        startTime = System.nanoTime();
+                        memBefore = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+                        //
+                        elapsedTime = System.nanoTime() - startTime;
+                        memAfter = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+                        memUsed = memAfter-memBefore;
+                        System.out.println("Time in milliseconds: " + (float) elapsedTime/1000000);
+                        System.out.println("Memory used in Kilobytes: " + memUsed / 1024);
                         break;
                 }
             }

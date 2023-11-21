@@ -34,35 +34,38 @@ In the following sections, we present the programming design, experimental setup
 
 This section outlines the key aspects of the design for our project. Our implementation is designed to provide a user-friendly interface for 
 interacting with various geometric algorithms. Java serves as the primary programming language for this project, 
-chosen primarily due to the authors' proficiency in its usage.
-
+chosen primarily due to the authors' proficiency in its usage, with JavaFX being chosen as the graphical framework due to its ability to provide
+modern graphics in a relatively short time.
 \subsection*{User Interface}
 
-The user interface is designed so that the users can place a point at their place of choosing when executing both line intersection algorithms
-and convex hull algorithms. Once the user has placed all the points, the user can indicate to the system to run the algorithm/s.
+The user interface is designed so that the users can place a point at their place of choosing when executing both line intersection
+and convex hull algorithms. Once the user has placed all the points, the user can instruct the system to run the algorithm/s.
 
 \subsection*{Visualization}
 
-To enhance understanding, the project provides visualization for each step of the algorithms. This includes graphical representations of input
+To enhance the understanding, the project provides visualization for each step of the algorithms. This includes graphical representations of input
 data, selection and checking criteria of the points, and final results.
 
 \subsection*{Time and Space Complexity Calculation}
 
 Time and Space complexities are calculated by subtracting the system time when the algorithm was initiated, from the system time
-after the algorithm finished its execution in milliseconds. Space complexity is handled 
+after the algorithm finished its execution in milliseconds. Space complexity is handled by using the \texttt{Runtime} class.
 
 \subsection*{Code Structure}
 
-The codebase follows a modular structure, with separate modules for each algorithm and a central module for handling user input and visualization. This design promotes code reusability and maintainability.
-
-\subsection*{Libraries and Dependencies}
-
-We leverage [Any Libraries or Dependencies Used] to expedite the implementation process and ensure the correctness and efficiency of our algorithms.
-
-\emph{Note: Customize this section based on the specifics of your project, including the actual programming language, libraries, and dependencies you are using.}
-
+The codebase follows a modular structure, with separate modules/classes for each algorithm and a central/class module for handling user input and visualization.
 
 \section*{Experimental Setup}
+The results gatherered were sourced from these hardware specifications.
+\begin{tabular}{l l}
+    \textbf{CPU:} & Intel Core i5-10300H \\
+    \textbf{RAM:} & 16 GB DDR4 2933 mHZ \\
+    \textbf{SSD:} & 256 GB NVMe M.2 \\
+    \textbf{GPU:} & NVIDIA GeForce GTX 1650 \\
+    \textbf{OS:} & Windows 10 Home \\
+    \textbf{JDK:} & 21 \\
+    \textbf{JavaFX SDK:} & 21 \\
+\end{tabular}
 
 \section*{Results and Discussion}
 Present your findings, including screenshots and discussions on the implemented algorithms. Compare their performance, execution times, and any other relevant metrics.

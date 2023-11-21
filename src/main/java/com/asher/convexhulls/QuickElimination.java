@@ -16,7 +16,6 @@ public class QuickElimination {
     static int maxY;
     static int maxYIdx = -1;
     static point maxYPoint;
-
     private static point findMaxY(List<point> points) {
         maxY = points.get(0).y;
         maxYIdx = 0;
@@ -30,11 +29,9 @@ public class QuickElimination {
         }
         return maxYPoint;
     }
-
     static int minY;
     static int minYIdx = -1;
     static point minYPoint;
-
     private static point findMinY(List<point> points) {
         minY = points.get(0).y;
         minYIdx = 0;
@@ -48,11 +45,9 @@ public class QuickElimination {
         }
         return minYPoint;
     }
-
     static int maxX;
     static int maxXIdx = -1;
     static point maxXPoint;
-
     private static point findMaxX(List<point> points) {
         maxX = points.get(0).x;
         maxXIdx = 0;
@@ -66,11 +61,9 @@ public class QuickElimination {
         }
         return maxXPoint;
     }
-
     static int minX;
     static int minXIdx = -1;
     static point minXPoint;
-
     private static point findMinX(List<point> points) {
         minX = points.get(0).x;
         minXIdx = 0;
@@ -84,7 +77,6 @@ public class QuickElimination {
         }
         return minXPoint;
     }
-
     static ArrayList<point> hull = new ArrayList<>();
     static ArrayList<point> region1 = new ArrayList<>();
     static ArrayList<point> region2 = new ArrayList<>();
@@ -92,8 +84,8 @@ public class QuickElimination {
     static ArrayList<point> region4 = new ArrayList<>();
     static int jItr;
     static int tempItr;
-
     public static void findConvexHull(List<point> points, Stage stg, Group grp) {
+        System.out.println("inserted2");
         stg.getScene().setOnKeyPressed(null);
         hull.add(findMinX(points));
         hull.add(findMinY(points));
