@@ -204,7 +204,7 @@ public class Main extends Application {
                     case "Quick Elimination":
                         startTime = System.nanoTime();
                         memBefore = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
-                        QuickElimination.findConvexHull(points,stg, convexGroup);
+                        animQuickElimination.findConvexHull(points,stg, convexGroup);
                         elapsedTime = System.nanoTime() - startTime;
                         memAfter = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
                         memUsed = memAfter-memBefore;

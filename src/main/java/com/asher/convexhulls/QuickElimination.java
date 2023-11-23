@@ -16,6 +16,7 @@ public class QuickElimination {
     static int maxY;
     static int maxYIdx = -1;
     static point maxYPoint;
+
     private static point findMaxY(List<point> points) {
         maxY = points.get(0).y;
         maxYIdx = 0;
@@ -29,9 +30,11 @@ public class QuickElimination {
         }
         return maxYPoint;
     }
+
     static int minY;
     static int minYIdx = -1;
     static point minYPoint;
+
     private static point findMinY(List<point> points) {
         minY = points.get(0).y;
         minYIdx = 0;
@@ -45,9 +48,11 @@ public class QuickElimination {
         }
         return minYPoint;
     }
+
     static int maxX;
     static int maxXIdx = -1;
     static point maxXPoint;
+
     private static point findMaxX(List<point> points) {
         maxX = points.get(0).x;
         maxXIdx = 0;
@@ -61,9 +66,11 @@ public class QuickElimination {
         }
         return maxXPoint;
     }
+
     static int minX;
     static int minXIdx = -1;
     static point minXPoint;
+
     private static point findMinX(List<point> points) {
         minX = points.get(0).x;
         minXIdx = 0;
@@ -77,6 +84,7 @@ public class QuickElimination {
         }
         return minXPoint;
     }
+
     static ArrayList<point> hull = new ArrayList<>();
     static ArrayList<point> region1 = new ArrayList<>();
     static ArrayList<point> region2 = new ArrayList<>();
@@ -84,6 +92,7 @@ public class QuickElimination {
     static ArrayList<point> region4 = new ArrayList<>();
     static int jItr;
     static int tempItr;
+
     public static void findConvexHull(List<point> points, Stage stg, Group grp) {
         System.out.println("inserted2");
         stg.getScene().setOnKeyPressed(null);
@@ -332,3 +341,37 @@ public class QuickElimination {
         grp.getChildren().add(l1);
     }
 }
+
+//        if (region1.size() > 3) {
+//                temp = region1.get(tempItr);
+//                i = region1.get(1);
+//                j = region1.get(jItr);
+//                KeyFrame kf = new KeyFrame(Duration.seconds(0.2), actionEvent -> {
+//                if (area(temp, i, j) >= 0) {
+//                tempItr++;
+//                temp = region1.get(tempItr);
+//                i = j;
+//                jItr++;
+//                j = region1.get(jItr);
+//                } else {
+//                region1.remove(i);
+//                if (tempItr - 1 < 0) {
+//        tempItr = 0;
+//        i = j;
+//        j = region1.get(jItr);
+//        } else {
+//        jItr--;
+//        i = region1.get(tempItr);
+//        tempItr--;
+//        temp = region1.get(tempItr);
+//        }
+//        }
+//        if(j != region1.get(region1.size() - 1)){
+//        if (area(temp, i, j) < 0) {
+//        region1.remove(i);
+//        }
+//        tl.stop();
+//        }
+//        });
+//        tl.getKeyFrames().add(kf);
+//        }
