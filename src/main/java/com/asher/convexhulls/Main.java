@@ -174,7 +174,7 @@ public class Main extends Application {
                     case "Brute Force":
                         startTime = System.nanoTime();
                         memBefore = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
-                        BruteForce.bruteForce(points, stg, convexGroup);
+                        animBruteForce.bruteForce(points, stg, convexGroup);
                         elapsedTime = System.nanoTime() - startTime;
                         memAfter = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
                         memUsed = memAfter-memBefore;

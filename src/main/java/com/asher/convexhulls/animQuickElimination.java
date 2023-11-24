@@ -204,6 +204,7 @@ public class animQuickElimination {
         region4.sort(Comparator.comparingInt(point::getX).reversed());
 
         if (region1.size() > 3) {
+            System.out.println("called1");
             r1jItr = 2;
             r1tempItr = 0;
             r1temp = region1.get(r1tempItr);
@@ -250,6 +251,7 @@ public class animQuickElimination {
         }
         //get hull of region2
         if (region2.size() > 3) {
+            System.out.println("called2");
             r2jItr = 2;
             r2tempItr = 0;
             r2temp = region2.get(r2tempItr);
@@ -296,6 +298,7 @@ public class animQuickElimination {
         }
 
         if (region3.size() > 3) {
+            System.out.println("called3");
             r3jItr = 2;
             r3tempItr = 0;
             r3temp = region3.get(r3tempItr);
@@ -342,6 +345,7 @@ public class animQuickElimination {
         }
 
         if (region4.size() > 3) {
+            System.out.println("called4");
             r4jItr = 2;
             r4tempItr = 0;
             r4temp = region4.get(r4tempItr);
