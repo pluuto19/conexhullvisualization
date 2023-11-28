@@ -1,6 +1,7 @@
 package com.asher.convexhulls;
 
 public class point {
+    boolean isLeft;
     String name;
     int x;
     int y;

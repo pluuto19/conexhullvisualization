@@ -18,11 +18,13 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Main extends Application {
     long startTime, elapsedTime;
-    long memBefore, memAfter, memUsed;
+    float memBefore, memAfter, memUsed;
     int winW = 1100;
     int winH = 700;
     String[] options = {"Line Intersection (Slope of two lines)", "Line Intersection (Area between three points)", "Research Method Intersection", "Brute Force", "Jarvis March", "Graham Scan", "Quick Elimination", "Research Method Hull"};
@@ -36,9 +38,11 @@ public class Main extends Application {
     Scene pointsCanvas = new Scene(convexGroup, winW, winH);
     LinkedList<point> points = new LinkedList<>();
     int count = 0;
+
     public static void main(String[] args) {
         launch();
     }
+
     @Override
     public void start(Stage stage) {
         oprs.setPromptText("Select an algorithm");
@@ -59,6 +63,9 @@ public class Main extends Application {
                     case "Line Intersection (Area between three points)":
                         drawLineIntersection("Line Intersection (Area between three points)", stage);
                         break;
+                    case "Research Method Intersection":
+                        drawLineIntersection("Research Method Intersection", stage);
+                        break;
                     case "Brute Force":
                         drawConvexHull("Brute Force", stage);
                         break;
@@ -71,6 +78,9 @@ public class Main extends Application {
                     case "Quick Elimination":
                         drawConvexHull("Quick Elimination", stage);
                         break;
+                    case "Research Method Hull":
+                        drawConvexHull("Research Method Hull", stage);
+                        break;
                 }
             } catch (NullPointerException ignored) {
             }
@@ -80,6 +90,7 @@ public class Main extends Application {
         stage.setScene(selectOperation);
         stage.show();
     }
+
     public void drawLineIntersection(String meth, Stage stg) {
         drawLines.setFill(Color.web("#000000"));
         drawLines.setOnMouseClicked(e -> {
@@ -98,11 +109,12 @@ public class Main extends Application {
 
         stg.setScene(drawLines);
     }
+
     public void helper(String meth, Scene scn, Group grp, LinkedList<point> points) {
         if (count == 4) {
             scn.setOnMouseClicked(null);
             startTime = System.nanoTime();
-            memBefore = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+            memBefore = (float) Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
             Line l1 = new Line(points.get(0).x, points.get(0).y, points.get(1).x, points.get(1).y);
             l1.setStroke(Color.web("#008000"));
             Line l2 = new Line(points.get(2).x, points.get(2).y, points.get(3).x, points.get(3).y);
@@ -127,7 +139,8 @@ public class Main extends Application {
                     grp.getChildren().add(isec);
 //                    scn.setFill(Color.web("#f74f58"));
                 }
-            } else {
+            }
+            else if (meth.equals("Line Intersection (Area between three points)")) {
                 if (ConvexHullUtil.doIntersectArea(points.get(0), points.get(1), points.get(2), points.get(3))) {
                     Label isec = new Label("Lines DO intersect");
                     isec.setLayoutX(430);
@@ -146,16 +159,40 @@ public class Main extends Application {
 //                    scn.setFill(Color.web("#f74f58"));
                 }
             }
+            else{
+                points.get(0).name = "l1";
+                points.get(1).name = "l1";
+                points.get(2).name = "l2";
+                points.get(3).name = "l2";
+                if (ConvexHullUtil.doIntersectSweepLine(points.get(0), points.get(1), points.get(2), points.get(3), Arrays.asList(points.get(0), points.get(1), points.get(2), points.get(3)))) {
+                    Label isec = new Label("Lines DO intersect");
+                    isec.setLayoutX(430);
+                    isec.setLayoutY(650);
+                    isec.setFont(Font.font("Arial", 24));
+                    isec.setTextFill(Color.web("#008000"));
+                    grp.getChildren().add(isec);
+//                    scn.setFill(Color.web("#8fdb91"));
+                } else {
+                    Label isec = new Label("Lines DO NOT intersect");
+                    isec.setLayoutX(430);
+                    isec.setLayoutY(650);
+                    isec.setFont(Font.font("Arial", 24));
+                    isec.setTextFill(Color.web("#FF0000"));
+                    grp.getChildren().add(isec);
+//                    scn.setFill(Color.web("#f74f58"));
+                }
+            }
             elapsedTime = System.nanoTime() - startTime;
-            memAfter = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
-            memUsed = memAfter-memBefore;
-            System.out.println("Time in milliseconds: " + (float) elapsedTime/1000000);
-            System.out.println("Memory used in Kilobytes: " + memUsed / 1024);
+            memAfter = (float) Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+            memUsed = memAfter - memBefore;
+            System.out.println("Time in milliseconds: " + (float) elapsedTime / 1000000);
+            System.out.println("Memory used in Kilobytes: " + memUsed);
         }
     }
+
     public void drawConvexHull(String meth, Stage stg) {
         pointsCanvas.setFill(Color.web("#000000"));
-        pointsCanvas.setOnMouseClicked(e->{
+        pointsCanvas.setOnMouseClicked(e -> {
             points.add(new point((int) e.getX(), (int) e.getY()));
             Label newLabel = new Label("p" + count);
             points.get(count).name = "p" + count;
@@ -167,58 +204,58 @@ public class Main extends Application {
             convexGroup.getChildren().add(newLabel);
             count++;
         });
-        pointsCanvas.setOnKeyPressed(e->{
-            if(e.getCode() == KeyCode.ENTER){
+        pointsCanvas.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
                 pointsCanvas.setOnMouseClicked(null);
-                switch (meth){
+                switch (meth) {
                     case "Brute Force":
                         startTime = System.nanoTime();
-                        memBefore = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
-                        animBruteForce.bruteForce(points, stg, convexGroup);
+                        memBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+                        BruteForce.bruteForce(points, stg, convexGroup);
                         elapsedTime = System.nanoTime() - startTime;
-                        memAfter = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
-                        memUsed = memAfter-memBefore;
-                        System.out.println("Time in milliseconds: " + (float) elapsedTime/1000000);
+                        memAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+                        memUsed = memAfter - memBefore;
+                        System.out.println("Time in milliseconds: " + (float) elapsedTime / 1000000);
                         System.out.println("Memory used in Kilobytes: " + memUsed / 1024);
                         break;
                     case "Jarvis March":
                         startTime = System.nanoTime();
-                        memBefore = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
-                        animJarvisMarch.jarvisMarch(points, stg, convexGroup);
+                        memBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+                        JarvisMarch.jarvisMarch(points, stg, convexGroup);
                         elapsedTime = System.nanoTime() - startTime;
-                        memAfter = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
-                        memUsed = memAfter-memBefore;
-                        System.out.println("Time in milliseconds: " + (float) elapsedTime/1000000);
+                        memAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+                        memUsed = memAfter - memBefore;
+                        System.out.println("Time in milliseconds: " + (float) elapsedTime / 1000000);
                         System.out.println("Memory used in Kilobytes: " + memUsed / 1024);
                         break;
                     case "Graham Scan":
                         startTime = System.nanoTime();
-                        memBefore = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
-                        animGrahamScan.grahamScan(points, stg, convexGroup);
+                        memBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+                        GrahamScan.grahamScan(points, stg, convexGroup);
                         elapsedTime = System.nanoTime() - startTime;
-                        memAfter = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
-                        memUsed = memAfter-memBefore;
-                        System.out.println("Time in milliseconds: " + (float) elapsedTime/1000000);
+                        memAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+                        memUsed = memAfter - memBefore;
+                        System.out.println("Time in milliseconds: " + (float) elapsedTime / 1000000);
                         System.out.println("Memory used in Kilobytes: " + memUsed / 1024);
                         break;
                     case "Quick Elimination":
                         startTime = System.nanoTime();
-                        memBefore = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
-                        animQuickElimination.findConvexHull(points,stg, convexGroup);
+                        memBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+                        QuickElimination.findConvexHull(points, stg, convexGroup);
                         elapsedTime = System.nanoTime() - startTime;
-                        memAfter = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
-                        memUsed = memAfter-memBefore;
-                        System.out.println("Time in milliseconds: " + (float) elapsedTime/1000000);
+                        memAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+                        memUsed = memAfter - memBefore;
+                        System.out.println("Time in milliseconds: " + (float) elapsedTime / 1000000);
                         System.out.println("Memory used in Kilobytes: " + memUsed / 1024);
                         break;
-                    case "Research Paper":
+                    case "Research Method Hull":
                         startTime = System.nanoTime();
-                        memBefore = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
-                        //
+                        memBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+                        QuickHull.quickHull(points, stg, convexGroup);
                         elapsedTime = System.nanoTime() - startTime;
-                        memAfter = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
-                        memUsed = memAfter-memBefore;
-                        System.out.println("Time in milliseconds: " + (float) elapsedTime/1000000);
+                        memAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+                        memUsed = memAfter - memBefore;
+                        System.out.println("Time in milliseconds: " + (float) elapsedTime / 1000000);
                         System.out.println("Memory used in Kilobytes: " + memUsed / 1024);
                         break;
                 }
