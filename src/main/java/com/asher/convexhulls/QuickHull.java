@@ -5,6 +5,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,7 +14,6 @@ public class QuickHull {
     static int maxX;
     static int maxXIdx = -1;
     static point maxXPoint;
-
     private static point findMaxX(List<point> points) {
         maxX = points.get(0).x;
         maxXIdx = 0;
@@ -26,7 +27,6 @@ public class QuickHull {
         }
         return maxXPoint;
     }
-
     static int minX;
     static int minXIdx = -1;
     static point minXPoint;
@@ -53,7 +53,7 @@ public class QuickHull {
         findMaxX(points); //b
         hull.add(minXPoint); //0th
         hull.add(maxXPoint); //1st
-//        drawLine(minXPoint, maxXPoint, grp);
+
         LinkedList<point> upperSet = new LinkedList<>();
         LinkedList<point> lowerSet = new LinkedList<>();
         for (int i = 0; i < points.size(); i++) {
@@ -72,7 +72,8 @@ public class QuickHull {
             System.out.print(hull.get(i).name + ", ");
         }
     }
-    private static void funcUpper(List<point> upperArr, point a, point b) {   //each recursive call gets the set and extreme points a and b
+    private static void funcUpper(List<point> upperArr, point a, point b) {
+        //each recursive call gets the set and extreme points a and b
         // each recursive call has to find its set's highest point
         int maxArea = Math.abs(area(a, b, upperArr.get(0)));
         int maxIdx = 0;
@@ -126,7 +127,8 @@ public class QuickHull {
         }
 
     }
-    private static void funcLower(List<point> lowerArr, point a, point b) {   //each recursive call gets the set and extreme points a and b
+    private static void funcLower(List<point> lowerArr, point a, point b) {
+        //each recursive call gets the set and extreme points a and b
         // each recursive call has to find its set's lowest point
         int maxArea = Math.abs(area(a, b, lowerArr.get(0)));
         int maxIdx = 0;
@@ -181,10 +183,8 @@ public class QuickHull {
 
     }
 
-    private static void drawLine(point a, point b, Group grp) {
-        Line l1 = new Line(a.x, a.y, b.x, b.y);
-        l1.setStroke(Color.web("#008000"));
-        grp.getChildren().add(l1);
+    private static void drawLine(Group grp) {
+        hull.sort(Comparator.comparing(point::getName));
     }
 
     public static int area(point p0, point p1, point p2) {

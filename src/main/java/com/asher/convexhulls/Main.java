@@ -5,29 +5,24 @@ import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 
 public class Main extends Application {
     long startTime, elapsedTime;
     float memBefore, memAfter, memUsed;
     int winW = 1100;
     int winH = 700;
-    String[] options = {"Line Intersection (Slope of two lines)", "Line Intersection (Area between three points)", "Research Method Intersection", "Brute Force", "Jarvis March", "Graham Scan", "Quick Elimination", "Research Method Hull"};
+    String[] options = {"Line Intersection (Slope of two lines)", "Line Intersection (Area between three points)", "Line Intersection (Sweep Line)", "Brute Force", "Jarvis March", "Graham Scan", "Quick Elimination", "Quick Hull"};
     ComboBox<String> oprs = new ComboBox<>(FXCollections.observableArrayList(options));
     GridPane gridPane = new GridPane(3, 3);
     Button confirm = new Button("Launch");
@@ -42,7 +37,6 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch();
     }
-
     @Override
     public void start(Stage stage) {
         oprs.setPromptText("Select an algorithm");
@@ -63,8 +57,8 @@ public class Main extends Application {
                     case "Line Intersection (Area between three points)":
                         drawLineIntersection("Line Intersection (Area between three points)", stage);
                         break;
-                    case "Research Method Intersection":
-                        drawLineIntersection("Research Method Intersection", stage);
+                    case "Line Intersection (Sweep Line)":
+                        drawLineIntersection("Line Intersection (Sweep Line)", stage);
                         break;
                     case "Brute Force":
                         drawConvexHull("Brute Force", stage);
@@ -78,8 +72,8 @@ public class Main extends Application {
                     case "Quick Elimination":
                         drawConvexHull("Quick Elimination", stage);
                         break;
-                    case "Research Method Hull":
-                        drawConvexHull("Research Method Hull", stage);
+                    case "Quick Hull":
+                        drawConvexHull("Quick Hull", stage);
                         break;
                 }
             } catch (NullPointerException ignored) {
@@ -90,13 +84,13 @@ public class Main extends Application {
         stage.setScene(selectOperation);
         stage.show();
     }
-
     public void drawLineIntersection(String meth, Stage stg) {
         drawLines.setFill(Color.web("#000000"));
+        drawGraphOnCanvas(group);
         drawLines.setOnMouseClicked(e -> {
             points.add(new point((int) e.getX(), (int) e.getY()));
             Circle newCircle = new Circle(points.get(count).x, points.get(count).y, 4.0f, Color.web("#FF0000"));
-            Label newLabel = new Label("p" + count);
+            Label newLabel = new Label(e.getX() + " , " + e.getY() );
             newLabel.setLayoutX(points.get(count).x - 25);
             newLabel.setLayoutY(points.get(count).y - 25);
             newLabel.setFont(Font.font("Consolas", 15));
@@ -106,10 +100,8 @@ public class Main extends Application {
             count++;
             helper(meth, drawLines, group, points);
         });
-
         stg.setScene(drawLines);
     }
-
     public void helper(String meth, Scene scn, Group grp, LinkedList<point> points) {
         if (count == 4) {
             scn.setOnMouseClicked(null);
@@ -139,8 +131,7 @@ public class Main extends Application {
                     grp.getChildren().add(isec);
 //                    scn.setFill(Color.web("#f74f58"));
                 }
-            }
-            else if (meth.equals("Line Intersection (Area between three points)")) {
+            } else if (meth.equals("Line Intersection (Area between three points)")) {
                 if (ConvexHullUtil.doIntersectArea(points.get(0), points.get(1), points.get(2), points.get(3))) {
                     Label isec = new Label("Lines DO intersect");
                     isec.setLayoutX(430);
@@ -158,8 +149,7 @@ public class Main extends Application {
                     grp.getChildren().add(isec);
 //                    scn.setFill(Color.web("#f74f58"));
                 }
-            }
-            else{
+            } else {
                 points.get(0).name = "l1";
                 points.get(1).name = "l1";
                 points.get(2).name = "l2";
@@ -187,19 +177,20 @@ public class Main extends Application {
             memUsed = memAfter - memBefore;
             System.out.println("Time in milliseconds: " + (float) elapsedTime / 1000000);
             System.out.println("Memory used in Kilobytes: " + memUsed);
+            displayComplexities((float) elapsedTime / 1000000, (int) memUsed);
         }
     }
-
     public void drawConvexHull(String meth, Stage stg) {
         pointsCanvas.setFill(Color.web("#000000"));
+        drawGraphOnCanvas(convexGroup);
         pointsCanvas.setOnMouseClicked(e -> {
             points.add(new point((int) e.getX(), (int) e.getY()));
-            Label newLabel = new Label("p" + count);
-            points.get(count).name = "p" + count;
+            Label newLabel = new Label(e.getX() + " , " + e.getY());
+            points.get(count).name = e.getX() + " , " + e.getY();
             convexGroup.getChildren().add(new Circle(points.get(count).x, points.get(count).y, 3.0f, Color.web("#FF0000")));
             newLabel.setLayoutX(points.get(count).x - 25);
             newLabel.setLayoutY(points.get(count).y - 25);
-            newLabel.setFont(Font.font("Consolas", 10));
+            newLabel.setFont(Font.font("Consolas", 13));
             newLabel.setTextFill(Color.web("#FFFFFF"));
             convexGroup.getChildren().add(newLabel);
             count++;
@@ -217,6 +208,7 @@ public class Main extends Application {
                         memUsed = memAfter - memBefore;
                         System.out.println("Time in milliseconds: " + (float) elapsedTime / 1000000);
                         System.out.println("Memory used in Kilobytes: " + memUsed / 1024);
+                        displayComplexities((float) elapsedTime / 1000000, (int) memUsed);
                         break;
                     case "Jarvis March":
                         startTime = System.nanoTime();
@@ -227,6 +219,7 @@ public class Main extends Application {
                         memUsed = memAfter - memBefore;
                         System.out.println("Time in milliseconds: " + (float) elapsedTime / 1000000);
                         System.out.println("Memory used in Kilobytes: " + memUsed / 1024);
+                        displayComplexities((float) elapsedTime / 1000000, (int) memUsed);
                         break;
                     case "Graham Scan":
                         startTime = System.nanoTime();
@@ -237,6 +230,7 @@ public class Main extends Application {
                         memUsed = memAfter - memBefore;
                         System.out.println("Time in milliseconds: " + (float) elapsedTime / 1000000);
                         System.out.println("Memory used in Kilobytes: " + memUsed / 1024);
+                        displayComplexities((float) elapsedTime / 1000000, (int) memUsed);
                         break;
                     case "Quick Elimination":
                         startTime = System.nanoTime();
@@ -247,8 +241,9 @@ public class Main extends Application {
                         memUsed = memAfter - memBefore;
                         System.out.println("Time in milliseconds: " + (float) elapsedTime / 1000000);
                         System.out.println("Memory used in Kilobytes: " + memUsed / 1024);
+                        displayComplexities((float) elapsedTime / 1000000, (int) memUsed);
                         break;
-                    case "Research Method Hull":
+                    case "Quick Hull":
                         startTime = System.nanoTime();
                         memBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
                         QuickHull.quickHull(points, stg, convexGroup);
@@ -257,10 +252,69 @@ public class Main extends Application {
                         memUsed = memAfter - memBefore;
                         System.out.println("Time in milliseconds: " + (float) elapsedTime / 1000000);
                         System.out.println("Memory used in Kilobytes: " + memUsed / 1024);
+                        displayComplexities((float) elapsedTime / 1000000, (int) memUsed);
                         break;
                 }
             }
         });
         stg.setScene(pointsCanvas);
+    }
+    private void displayComplexities(float time, int space) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+        alert.setTitle("Complexities");
+        alert.setHeaderText(null);
+        alert.setContentText(null);
+        TextArea textArea;
+        if (space == 0) {
+            textArea = new TextArea("Execution Time (millisecond) : " + time + "\n\nJVM ran the Garbage Collector");
+        } else {
+            textArea = new TextArea("Execution Time (millisecond) : " + time + "\n\nMemory Taken (bytes): " + space);
+        }
+
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+
+        alert.getDialogPane().setExpandableContent(textArea);
+        alert.getDialogPane().setExpanded(true);
+
+        alert.getButtonTypes().setAll(ButtonType.OK);
+        alert.showAndWait();
+    }
+    private void drawGraphOnCanvas(Group grp){
+
+        for(int y = -25 ; y <= winH ; y+=75){
+            Label newLabel = new Label(Integer.toString(y));
+            newLabel.setFont(Font.font("Consolas", 11));
+            newLabel.setTextFill(Color.web("#FFFFFF"));
+            newLabel.setLayoutX(5);
+            newLabel.setLayoutY(y + 5);
+
+            Line newLine = new Line();
+            newLine.setStroke(Color.web("#949494"));
+            newLine.setStartX(0);
+            newLine.setStartY(y);
+            newLine.setEndX(winW);
+            newLine.setEndY(y);
+            grp.getChildren().add(newLine);
+            grp.getChildren().add(newLabel);
+        }
+
+        for(int x = -25 ; x <= winW ; x+=75){
+            Label newLabel = new Label(Integer.toString(x));
+            newLabel.setFont(Font.font("Consolas", 11));
+            newLabel.setTextFill(Color.web("#FFFFFF"));
+            newLabel.setLayoutX(x + 5);
+            newLabel.setLayoutY(5);
+
+            Line newLine = new Line();
+            newLine.setStroke(Color.web("#949494"));
+            newLine.setStartX(x);
+            newLine.setStartY(0);
+            newLine.setEndX(x);
+            newLine.setEndY(winH);
+            grp.getChildren().add(newLine);
+            grp.getChildren().add(newLabel);
+        }
     }
 }
